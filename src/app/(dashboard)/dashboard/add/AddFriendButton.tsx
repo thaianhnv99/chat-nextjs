@@ -60,7 +60,7 @@ const AddFriendButton = ({}: AddFriendButtonProps) => {
   );
 
   return (
-    <Box mt={4}>
+    <Box mt={2}>
       <Typography variant="h3" fontWeight="bold" mb={1}>
         Add a friend
       </Typography>
