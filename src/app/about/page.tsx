@@ -5,7 +5,7 @@ interface PageProps {
 const Page = ({ children }: PageProps) => {
   return (
     <>
-      <div>about</div>
+      <div>Page about</div>
     </>
   );
 };

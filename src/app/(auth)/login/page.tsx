@@ -27,7 +27,7 @@ const Page = () => {
   return (
     <Box
       sx={{
-        width: "25vw",
+        width: "300px",
         maxWidth: "100%",
         margin: "auto",
         textAlign: "center",
