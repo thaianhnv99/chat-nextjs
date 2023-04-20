@@ -7,12 +7,21 @@ import Image from "next/image";
 import { Typography, useTheme } from "@mui/material";
 import { MuiIcons, sideBarOption } from "@/config/menu";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { Session } from "next-auth";
+import SignOutButton from "@/components/SignOutButton";
+import FriendRequestSidebar from "@/components/FriendRequestSidebarUI";
 
 interface LayoutWrapperProps {
+  session: Session;
+  unseenRequestCount: number;
   children: React.ReactNode;
 }
 
-const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
+const LayoutWrapper = ({
+  session,
+  unseenRequestCount,
+  children,
+}: LayoutWrapperProps) => {
   const theme = useTheme();
 
   return (
@@ -24,7 +33,7 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
     >
       <Box
         sx={{
-          width: "300px",
+          minWidth: "400px",
           height: "100%",
           display: "flex",
           flexDirection: "column",
@@ -34,7 +43,8 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
       >
         <Box
           sx={{
-            margin: "1rem",
+            marginLeft: "1.5rem",
+            marginTop: "1.5rem",
             display: "flex",
             flexShrink: 0,
           }}
@@ -47,6 +57,7 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
               height={30}
               style={{
                 transform: "rotate(45deg)",
+                backgroundColor: "aquamarine",
               }}
             ></Image>
           </Link>
@@ -54,11 +65,14 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
         <Box
           sx={{
             marginTop: "1.5rem",
-            marginLeft: "1rem",
+            marginLeft: "1.5rem",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
             ul: {
               display: "flex",
               flexDirection: "column",
-              // gap: "1rem",
+              height: "100%",
               li: {
                 listStyleType: "none",
                 lineHeight: "48px",
@@ -73,7 +87,11 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
           >
             Your chats
           </Typography>
-          <nav>
+          <nav
+            style={{
+              flex: 1,
+            }}
+          >
             <ul role="list">
               <li>Test</li>
               <li>
@@ -97,6 +115,9 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
                             gap: "5px",
                             textDecoration: "unset",
                             color: theme.color.gray50,
+                            "&:hover": {
+                              color: "#606060",
+                            },
                           }}
                         >
                           <ListItemIcon
@@ -104,7 +125,7 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
                               minWidth: "fit-content",
                             }}
                           >
-                            <DynamicIcon fontSize="small" />
+                            <DynamicIcon fontSize="medium" />
                           </ListItemIcon>
                           <Typography
                             sx={{
@@ -117,7 +138,64 @@ const LayoutWrapper = ({ children }: LayoutWrapperProps) => {
                       </li>
                     );
                   })}
+                  <li>
+                    <FriendRequestSidebar
+                      sessionId={session.user.id}
+                      initialUnseenRequestCount={+unseenRequestCount}
+                    />
+                  </li>
                 </ul>
+              </li>
+              <li
+                style={{
+                  marginTop: "auto",
+                  marginBottom: "1rem",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1rem",
+                    }}
+                  >
+                    <Image
+                      width={50}
+                      height={50}
+                      style={{
+                        borderRadius: "50%",
+                      }}
+                      referrerPolicy="no-referrer"
+                      src={session?.user.image || ""}
+                      alt={"your image profile"}
+                    />
+                    <Box
+                      sx={{
+                        overflow: "auto",
+                        "& .MuiTypography-root": {
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        },
+                      }}
+                    >
+                      <Typography fontWeight="bold">
+                        {session.user.name}
+                      </Typography>
+                      <Typography color={theme.color.gray50}>
+                        {session.user.email}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <SignOutButton />
+                </Box>
               </li>
             </ul>
           </nav>

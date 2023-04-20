@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { ButtonUI } from "@/components/ui";
 import Box from "@mui/material/Box";

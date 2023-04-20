@@ -1,7 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import AddFriendButton from "./AddFriendButton";
+import AddFriendButton from "@/components/AddFriendButton";
 
 interface PageProps {}
 

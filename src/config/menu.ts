@@ -17,6 +17,7 @@ import {
   Settings,
   Straighten,
   ViewCarousel,
+  ExitToApp,
 } from "@mui/icons-material";
 
 interface SideBarOption {
@@ -53,6 +54,7 @@ export const MuiIcons = {
   CalendarViewDay,
   Feedback,
   LocalOffer,
+  ExitToApp
 };
 
 export type IconType = keyof typeof MuiIcons;
