@@ -1,21 +1,86 @@
-import { Typography } from "@mui/material";
+"use client";
+
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface FriendRequestsProps {
   incomingFriendRequests: IncomingFriendRequest[];
+  sessionId: string;
 }
-const FriendRequests = ({ incomingFriendRequests }: FriendRequestsProps) => {
+const FriendRequests = ({
+  incomingFriendRequests,
+  sessionId,
+}: FriendRequestsProps) => {
   const [friendRequest, setFriendRequest] = useState<IncomingFriendRequest[]>(
     incomingFriendRequests
   );
+  const route = useRouter();
+
+  const acceptFriend = async (senderId: string) => {
+    await axios.post("/api/friends/accept", { id: senderId });
+    setFriendRequest((prev) => prev.filter((i) => i.senderId !== senderId));
+    route.refresh();
+  };
+
+  const denyFriend = async (senderId: string) => {
+    await axios.post("/api/friends/deny", { id: senderId });
+    setFriendRequest((prev) => prev.filter((i) => i.senderId !== senderId));
+    route.refresh();
+  };
+
   return (
-    <>
-      {friendRequest.length === 0 ? (
-        <Typography>Nothing to show here</Typography>
-      ) : (
-        <></>
-      )}
-    </>
+    <Box
+      sx={{
+        width: "100%",
+        padding: "1rem",
+      }}
+    >
+      <Typography variant="h3" fontWeight="bold" mt={1}>
+        Add a friend
+      </Typography>
+      <Box mt={1}>
+        {friendRequest.length === 0 ? (
+          <Typography color={(theme) => theme.color.gray50}>
+            Nothing to show here...
+          </Typography>
+        ) : (
+          friendRequest.map((item) => {
+            return (
+              <Box
+                key={item.senderId}
+                sx={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "center",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <Typography>{item.senderEmail}</Typography>
+                <CheckCircleRoundedIcon
+                  color="success"
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => acceptFriend(item.senderId)}
+                />
+                <CancelRoundedIcon
+                  color="error"
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => denyFriend(item.senderId)}
+                />
+              </Box>
+            );
+          })
+        )}
+      </Box>
+    </Box>
   );
 };
 

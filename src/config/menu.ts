@@ -1,24 +1,5 @@
-import {
-  CalendarViewDay,
-  DisplaySettings,
-  Done,
-  EventNote,
-  ExpandLess,
-  ExpandMore,
-  Feedback,
-  LocalOffer,
-  Loyalty,
-  NotificationImportant,
-  NotificationsActive,
-  OtherHouses,
-  PinDrop,
-  Policy,
-  PunchClock,
-  Settings,
-  Straighten,
-  ViewCarousel,
-  ExitToApp,
-} from "@mui/icons-material";
+import Settings from "@mui/icons-material/Settings";
+import ExitToApp from "@mui/icons-material/ExitToApp";
 
 interface SideBarOption {
   id: number;
@@ -36,25 +17,8 @@ export const sideBarOption: SideBarOption[] = [
 ];
 
 export const MuiIcons = {
-  Done,
-  ExpandLess,
-  ExpandMore,
-  NotificationsActive,
   Settings,
-  PinDrop,
-  Straighten,
-  NotificationImportant,
-  DisplaySettings,
-  OtherHouses,
-  EventNote,
-  ViewCarousel,
-  Loyalty,
-  PunchClock,
-  Policy,
-  CalendarViewDay,
-  Feedback,
-  LocalOffer,
-  ExitToApp
+  ExitToApp,
 };
 
 export type IconType = keyof typeof MuiIcons;
