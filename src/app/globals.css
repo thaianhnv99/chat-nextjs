@@ -57,9 +57,9 @@ a {
   text-decoration: none;
 }
 
-.area-input-chat:focus {
-  border
-}
+/* .area-input-chat:focus {
+  border: 1px solid red;
+} */
 
 @media (prefers-color-scheme: dark) {
   html {
