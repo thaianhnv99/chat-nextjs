@@ -10,16 +10,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { Session } from "next-auth";
 import SignOutButton from "@/components/SignOutButton";
 import FriendRequestSidebar from "@/components/FriendRequestSidebarUI";
+import ChatListSidebarUI from "@/components/ChatListSideBarUI";
 
 interface LayoutWrapperProps {
   session: Session;
   unseenRequestCount: number;
+  friends: User[];
   children: React.ReactNode;
 }
 
 const LayoutWrapper = ({
   session,
   unseenRequestCount,
+  friends,
   children,
 }: LayoutWrapperProps) => {
   const theme = useTheme();
@@ -80,20 +83,27 @@ const LayoutWrapper = ({
             },
           }}
         >
-          <Typography
-            variant="label"
-            color={theme.color.gray50}
-            lineHeight="48px"
-          >
-            Your chats
-          </Typography>
+          {friends.length > 0 && (
+            <Typography
+              variant="label"
+              color={theme.color.gray50}
+              lineHeight="48px"
+            >
+              Your chats
+            </Typography>
+          )}
           <nav
             style={{
               flex: 1,
             }}
           >
             <ul role="list">
-              <li>Test</li>
+              <li>
+                <ChatListSidebarUI
+                  sessionId={session.user.id}
+                  friends={friends}
+                />
+              </li>
               <li>
                 <Typography
                   variant="label"

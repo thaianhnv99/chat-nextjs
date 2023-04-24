@@ -38,7 +38,7 @@ export const POST = async (req: Request) => {
       return new Response("No friend request", { status: 400 });
     }
 
-    await db.sadd(`user:${session.user.id}: friends`, idToAdd);
+    await db.sadd(`user:${session.user.id}:friends`, idToAdd);
 
     await db.sadd(`user:${idToAdd}:friends`, session.user.id);
 
