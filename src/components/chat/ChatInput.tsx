@@ -13,11 +13,6 @@ const ChatInput = ({ chatPartner }: ChatInputProps) => {
   const [chatText, setChatText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const isFocus = useMemo(() => {
-    return textareaRef.current?.activeElement;
-  }, []);
-  console.log(isFocus);
-
   const sendMessage = () => {
     console.log("chatText");
   };
@@ -46,7 +41,6 @@ const ChatInput = ({ chatPartner }: ChatInputProps) => {
           color: "black",
           border: "none",
         }}
-        className="area-input-chat"
       />
       <Box onClick={(e) => textareaRef.current?.focus()}></Box>
     </Box>
