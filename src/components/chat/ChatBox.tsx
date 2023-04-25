@@ -9,11 +9,12 @@ import Messages from "./Messages";
 import ChatInput from "./ChatInput";
 
 interface ChatBoxProps {
+  chatId: string;
   session: Session;
   chatPartner: User;
   messages: Message[];
 }
-const ChatBox = ({ session, chatPartner, messages }: ChatBoxProps) => {
+const ChatBox = ({ chatId, session, chatPartner, messages }: ChatBoxProps) => {
   const theme = useTheme();
 
   return (
@@ -21,6 +22,7 @@ const ChatBox = ({ session, chatPartner, messages }: ChatBoxProps) => {
       sx={{
         width: "100%",
         height: "100%",
+        maxHeight: "calc(100vh - 3rem)",
         display: "flex",
         flexDirection: "column",
       }}
@@ -69,8 +71,13 @@ const ChatBox = ({ session, chatPartner, messages }: ChatBoxProps) => {
           </Box>
         </Box>
       </Box>
-      <Messages sessionId={session.user.id} initialMessage={messages} />
-      <ChatInput chatPartner={chatPartner} />
+      <Messages
+        sessionId={session.user.id}
+        initialMessage={messages}
+        sessionImg={session.user.image || ""}
+        chatPartner={chatPartner}
+      />
+      <ChatInput chatId={chatId} chatPartner={chatPartner} />
     </Box>
   );
 };

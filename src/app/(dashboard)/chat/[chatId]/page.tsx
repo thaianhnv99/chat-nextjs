@@ -19,13 +19,16 @@ async function getChatMessages(chatId: string) {
       `chat:${chatId}:messages`,
       0,
       -1
-    );
+    );    
 
     const dbMessages = results.map((message) => JSON.parse(message) as Message);
 
-    const reversedDbMessages = dbMessages.reverse();
+    const reversedDbMessages = dbMessages;
 
     const messages = messageArrayValidator.parse(reversedDbMessages);
+
+    console.log('messages', messages);
+    
 
     return messages;
   } catch (error) {
@@ -50,10 +53,15 @@ const Page = async ({ params }: PageProps) => {
 
   const chatPartner = (await db.get(`user:${chatPartnerId}`)) as User;
 
-  const messages = await getChatMessages(chatPartnerId);
+  const messages = await getChatMessages(chatId);
 
   return (
-    <ChatBox session={session} chatPartner={chatPartner} messages={messages} />
+    <ChatBox
+      chatId={chatId}
+      session={session}
+      chatPartner={chatPartner}
+      messages={messages}
+    />
   );
 };
 

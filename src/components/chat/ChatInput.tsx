@@ -1,31 +1,43 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
-
+import TextareaAutosize from "react-textarea-autosize";
 import { useMemo, useRef, useState } from "react";
+import axios from "axios";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
+import { toast } from "react-hot-toast";
 
 interface ChatInputProps {
   chatPartner: User;
+  chatId: string;
 }
-const ChatInput = ({ chatPartner }: ChatInputProps) => {
+const ChatInput = ({ chatPartner, chatId }: ChatInputProps) => {
   const [chatText, setChatText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     console.log("chatText");
+    try {
+      setIsLoading(true);
+      await axios.post("/api/message/send", { text: chatText, chatId });
+      setChatText("");
+    } catch (error) {
+      toast.error("Something went wrong. please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <Box
       mt="auto"
       sx={{
         width: "100%",
-        height: "300px",
       }}
     >
       <Box
         sx={{
-          height: "150px",
           margin: "1rem",
           padding: "0.5rem",
           borderRadius: "5px",
@@ -41,7 +53,7 @@ const ChatInput = ({ chatPartner }: ChatInputProps) => {
           ref={textareaRef}
           placeholder={`Message ${chatPartner.name}`}
           value={chatText}
-          minRows={3}
+          rows={1}
           onChange={(e) => setChatText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -56,19 +68,32 @@ const ChatInput = ({ chatPartner }: ChatInputProps) => {
             border: "none",
             outline: "unset",
             width: "100%",
-            height: "48px",
+            paddingLeft: ".5rem",
+            paddingTop: ".5rem",
+            display: "block",
+            fontFamily: "Roboto,sans-serif",
           }}
         />
         <Box
           sx={{
-            width: '100%',
-            height: "100%",
-            position: "absolute",
-            left: 0,
-            top: 0,
+            width: "100%",
+            height: "4rem",
           }}
           onClick={(e) => textareaRef.current?.focus()}
         ></Box>
+        <Button
+          size="small"
+          onClick={sendMessage}
+          disabled={isLoading}
+          variant="contained"
+          sx={{
+            position: "absolute",
+            right: "0.3rem",
+            bottom: "0.3rem",
+          }}
+        >
+          {isLoading ? <span>Loading...</span> : <span>Post</span>}
+        </Button>
       </Box>
     </Box>
   );
