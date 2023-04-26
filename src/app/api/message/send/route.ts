@@ -1,6 +1,8 @@
 import { authOption } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { fetchRedis } from "@/lib/helpers/redis";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 import { messageValidator } from "@/lib/validations/message";
 import { nanoid } from "nanoid";
 import { getServerSession } from "next-auth";
@@ -8,8 +10,6 @@ import { getServerSession } from "next-auth";
 export const POST = async (req: Request) => {
   try {
     const { text, chatId } = await req.json();
-
-    console.log(chatId);
 
     const session = await getServerSession(authOption);
 
@@ -51,6 +51,13 @@ export const POST = async (req: Request) => {
     };
 
     const message = messageValidator.parse(messageData);
+
+    // Notify all connected chat room cliends
+    pusherServer.trigger(
+      toPusherKey(`chat:${chatId}`),
+      "incoming_messages",
+      message
+    );
 
     // All valid, send the message
     await db.zadd(`chat:${chatId}:messages`, {

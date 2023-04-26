@@ -76,6 +76,7 @@ const ChatBox = ({ chatId, session, chatPartner, messages }: ChatBoxProps) => {
         initialMessage={messages}
         sessionImg={session.user.image || ""}
         chatPartner={chatPartner}
+        chatId={chatId}
       />
       <ChatInput chatId={chatId} chatPartner={chatPartner} />
     </Box>

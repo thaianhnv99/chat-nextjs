@@ -15,6 +15,7 @@ const Layout = async ({ children }: LayoutProps) => {
   }
 
   const friends = await getFriendsByUserId(session.user.id);
+  
   const unseenRequestCount = (
     (await fetchRedis(
       "smembers",
@@ -22,10 +23,14 @@ const Layout = async ({ children }: LayoutProps) => {
     )) as User[]
   ).length;
 
+  console.log(`user:${session.user.id}:incoming_friend_requests`);
+  console.log('unseenRequestCount:25', unseenRequestCount);
+  
+
   return (
     <LayoutWrapper
       session={session}
-      unseenRequestCount={unseenRequestCount}
+      initialUnseenRequestCount={unseenRequestCount}
       friends={friends}
     >
       {children}

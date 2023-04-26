@@ -5,7 +5,7 @@ import AddFriendButton from "@/components/AddFriendButton";
 
 interface PageProps {}
 
-const Page = ({}: PageProps) => {
+const Page = () => {
   return (
     <Box
       sx={{

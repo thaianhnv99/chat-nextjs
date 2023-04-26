@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import TextareaAutosize from "react-textarea-autosize";
 import { useMemo, useRef, useState } from "react";
 import axios from "axios";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
 
@@ -18,7 +17,7 @@ const ChatInput = ({ chatPartner, chatId }: ChatInputProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const sendMessage = async () => {
-    console.log("chatText");
+    if (!chatText) return;
     try {
       setIsLoading(true);
       await axios.post("/api/message/send", { text: chatText, chatId });

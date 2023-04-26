@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import messengerIcon from "@/assets/icons/send.svg";
 import Image from "next/image";
-import { Typography, useTheme } from "@mui/material";
+import { Typography } from "@mui/material";
 import { MuiIcons, sideBarOption } from "@/config/menu";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { Session } from "next-auth";
@@ -14,19 +14,17 @@ import ChatListSidebarUI from "@/components/ChatListSideBarUI";
 
 interface LayoutWrapperProps {
   session: Session;
-  unseenRequestCount: number;
+  initialUnseenRequestCount: number;
   friends: User[];
   children: React.ReactNode;
 }
 
 const LayoutWrapper = ({
   session,
-  unseenRequestCount,
+  initialUnseenRequestCount,
   friends,
   children,
 }: LayoutWrapperProps) => {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
@@ -41,7 +39,7 @@ const LayoutWrapper = ({
           display: "flex",
           flexDirection: "column",
           overflow: "auto",
-          borderRight: "1px solid " + theme.color.gray30,
+          borderRight: (theme) => "1px solid " + theme.color?.gray30,
         }}
       >
         <Box
@@ -86,7 +84,7 @@ const LayoutWrapper = ({
           {friends.length > 0 && (
             <Typography
               variant="label"
-              color={theme.color.gray50}
+              color={(theme) => theme.color?.gray50}
               lineHeight="48px"
             >
               Your chats
@@ -107,7 +105,7 @@ const LayoutWrapper = ({
               <li>
                 <Typography
                   variant="label"
-                  color={theme.color.gray50}
+                  color={(theme) => theme.color?.gray50}
                   lineHeight="48px"
                 >
                   Overview
@@ -124,7 +122,7 @@ const LayoutWrapper = ({
                             alignItems: "center",
                             gap: "5px",
                             textDecoration: "unset",
-                            color: theme.color.gray50,
+                            color: (theme) => theme.color?.gray50,
                             "&:hover": {
                               color: "#606060",
                             },
@@ -151,7 +149,7 @@ const LayoutWrapper = ({
                   <li>
                     <FriendRequestSidebar
                       sessionId={session.user.id}
-                      initialUnseenRequestCount={+unseenRequestCount}
+                      initialUnseenRequestCount={+initialUnseenRequestCount}
                     />
                   </li>
                 </ul>
@@ -199,7 +197,7 @@ const LayoutWrapper = ({
                       <Typography fontWeight="bold">
                         {session.user.name}
                       </Typography>
-                      <Typography color={theme.color.gray50}>
+                      <Typography color={(theme) => theme.color?.gray50}>
                         {session.user.email}
                       </Typography>
                     </Box>

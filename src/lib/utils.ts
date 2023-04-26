@@ -11,3 +11,7 @@ export enum DateFormat {
 export const formatDate = (time: any, dateFormat: DateFormat) => {
   return format(time, dateFormat);
 };
+
+export const toPusherKey = (key: string) => {
+  return key.replace(/:/g, "__");
+};

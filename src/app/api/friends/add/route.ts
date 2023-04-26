@@ -1,6 +1,8 @@
 import { authOption } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { fetchRedis } from "@/lib/helpers/redis";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 import { addFriendValidator } from "@/lib/validations/add-friend";
 import { getServerSession } from "next-auth";
 import { ZodError } from "zod";
@@ -10,7 +12,10 @@ export const POST = async (req: Request) => {
     const body = await req.json();
     const { email: emailToAdd } = addFriendValidator.parse(body.email);
 
-    const idToAdd = await fetchRedis("get", `user:email:${emailToAdd}`) as string;
+    const idToAdd = (await fetchRedis(
+      "get",
+      `user:email:${emailToAdd}`
+    )) as string;
 
     if (!idToAdd) {
       return new Response("This person does not exit.", { status: 400 });
@@ -55,7 +60,15 @@ export const POST = async (req: Request) => {
     }
 
     // Valid request, send friend request
-    db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
+    await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
+    pusherServer.trigger(
+      toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
+      "friend_requests",
+      {
+        senderId: session.user.id,
+        senderEmail: session.user.email,
+      }
+    );
     return new Response("OK");
   } catch (error) {
     if (error instanceof ZodError) {
@@ -63,7 +76,7 @@ export const POST = async (req: Request) => {
     }
 
     console.log(error);
-    
+
     return new Response("Invalid request");
   }
 };

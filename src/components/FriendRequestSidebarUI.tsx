@@ -2,6 +2,10 @@
 
 import { Box, Link, ListItemIcon, Typography, useTheme } from "@mui/material";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import { useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface FriendRequestSidebarProps {
   sessionId: string;
@@ -11,7 +15,35 @@ const FriendRequestSidebar = ({
   sessionId,
   initialUnseenRequestCount,
 }: FriendRequestSidebarProps) => {
+  const [unseenRequestCount, setUnseenRequestCount] = useState<number>(
+    initialUnseenRequestCount
+  );
   const theme = useTheme();
+  const router = useRouter();
+
+  useEffect(() => {
+    setUnseenRequestCount(initialUnseenRequestCount);
+  }, [initialUnseenRequestCount]);
+
+  useEffect(() => {
+    pusherClient.subscribe(
+      toPusherKey(`user:${sessionId}:incoming_friend_requests`)
+    );
+
+    const friendRequestHandle = () => {
+      setUnseenRequestCount((prev) => prev + 1);
+      router.refresh();
+    };
+
+    pusherClient.bind("friend_requests", friendRequestHandle);
+
+    return () => {
+      pusherClient.unsubscribe(
+        toPusherKey(`user:${sessionId}:incoming_friend_requests`)
+      );
+      pusherClient.unbind("friend_requests", friendRequestHandle);
+    };
+  }, [router, sessionId]);
   return (
     <Link
       href={"/dashboard/requests"}
@@ -57,7 +89,7 @@ const FriendRequestSidebar = ({
             borderRadius: "50%",
           }}
         >
-          {initialUnseenRequestCount ? initialUnseenRequestCount : null}
+          {unseenRequestCount ? unseenRequestCount : null}
         </Typography>
       </Box>
     </Link>

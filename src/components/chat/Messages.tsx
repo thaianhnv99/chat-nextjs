@@ -1,15 +1,17 @@
-import { DateFormat, formatDate } from "@/lib/utils";
+import { pusherClient } from "@/lib/pusher";
+import { DateFormat, formatDate, toPusherKey } from "@/lib/utils";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface MessagesProps {
   sessionId: string;
   initialMessage: Message[];
   sessionImg: string;
   chatPartner: User;
+  chatId: string;
 }
 
 const Messages = ({
@@ -17,12 +19,26 @@ const Messages = ({
   initialMessage,
   sessionImg,
   chatPartner,
+  chatId,
 }: MessagesProps) => {
   const [messages, setMessages] = useState(initialMessage);
 
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
 
-  console.log("messages", messages);
+  useEffect(() => {
+    pusherClient.subscribe(toPusherKey(`chat:${chatId}`));
+
+    const messagesHandle = (message: Message) => {
+      setMessages((prev) => [...prev, message]);
+    };
+
+    pusherClient.bind("incoming_messages", messagesHandle);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`chat:${chatId}`));
+      pusherClient.unbind("incoming_messages", messagesHandle);
+    };
+  }, [chatId]);
 
   return (
     <Box
