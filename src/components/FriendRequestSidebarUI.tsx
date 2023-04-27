@@ -52,7 +52,7 @@ const FriendRequestSidebar = ({
         alignItems: "center",
         gap: "5px",
         textDecoration: "unset",
-        color: theme.color.gray50,
+        color: theme.color?.gray50,
         "&:hover": {
           color: "#606060",
         },

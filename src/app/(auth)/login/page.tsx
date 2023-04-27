@@ -17,7 +17,6 @@ const Page = () => {
     try {
       await signIn("google");
     } catch (error) {
-      console.log(error);
       toast.error("something");
     } finally {
       setLoading(false);

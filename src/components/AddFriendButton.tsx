@@ -10,6 +10,7 @@ import axios, { AxiosError } from "axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-hot-toast";
 
 interface AddFriendButtonProps {}
 
@@ -17,6 +18,7 @@ type FormData = z.infer<typeof addFriendValidator>;
 
 const AddFriendButton = ({}: AddFriendButtonProps) => {
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -28,13 +30,14 @@ const AddFriendButton = ({}: AddFriendButtonProps) => {
 
   const addFriend = useCallback(
     async (email: string) => {
+      setIsLoading(true);
       try {
         const validatedEmail = addFriendValidator.parse({ email });
 
         await axios.post("/api/friends/add", {
           email: validatedEmail,
         });
-        setIsSuccess(true);
+        toast.success("Friend sent request");
       } catch (error) {
         if (error instanceof z.ZodError) {
           setError("email", { message: error.message });
@@ -47,6 +50,8 @@ const AddFriendButton = ({}: AddFriendButtonProps) => {
         }
 
         setError("email", { message: "Something went wrong." });
+      } finally {
+        setIsLoading(false);
       }
     },
     [setError]
@@ -78,17 +83,12 @@ const AddFriendButton = ({}: AddFriendButtonProps) => {
             placeholder="you@example.com"
           />
           <ButtonUI type="submit" size="m">
-            Add
+            {`Add${isLoading ? "..." : ""}`}
           </ButtonUI>
         </Box>
         {errors?.email && (
           <Typography variant="caption" color={(theme) => theme.color.main}>
             {errors?.email.message}
-          </Typography>
-        )}
-        {isSuccess && (
-          <Typography variant="caption" color={(theme) => theme.color.success}>
-            Friend sent request
           </Typography>
         )}
       </form>

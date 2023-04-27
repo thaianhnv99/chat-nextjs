@@ -23,10 +23,6 @@ const Layout = async ({ children }: LayoutProps) => {
     )) as User[]
   ).length;
 
-  console.log(`user:${session.user.id}:incoming_friend_requests`);
-  console.log('unseenRequestCount:25', unseenRequestCount);
-  
-
   return (
     <LayoutWrapper
       session={session}

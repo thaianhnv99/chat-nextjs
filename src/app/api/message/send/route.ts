@@ -41,8 +41,6 @@ export const POST = async (req: Request) => {
     )) as User;
     const timestamp = Date.now();
 
-    console.log(sender);
-
     const messageData: Message = {
       id: nanoid(),
       senderId: session.user.id,

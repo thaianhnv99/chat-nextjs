@@ -27,9 +27,6 @@ async function getChatMessages(chatId: string) {
 
     const messages = messageArrayValidator.parse(reversedDbMessages);
 
-    console.log('messages', messages);
-    
-
     return messages;
   } catch (error) {
     notFound();

@@ -75,8 +75,6 @@ export const POST = async (req: Request) => {
       return new Response("Invalid request payload", { status: 422 });
     }
 
-    console.log(error);
-
     return new Response("Invalid request");
   }
 };

@@ -22,8 +22,6 @@ export const POST = async (req: Request) => {
       idToAdd
     );
 
-    console.log("req 1", isAlreadyFriends);
-
     if (isAlreadyFriends) {
       return new Response("Already friends", { status: 400 });
     }
